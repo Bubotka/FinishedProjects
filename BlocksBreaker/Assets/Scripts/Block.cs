@@ -10,16 +10,13 @@ public class Block : MonoBehaviour
     [SerializeField] private AudioClip _blockDestroy;
     [SerializeField] private GameObject _blockSparkles;
     [SerializeField] private Sprite[] _hitSprites;
-    [SerializeField] private int _randomFactor = 2;
 
     private int _currentHits;
     private Level _level;
-    private Rigidbody2D _rigidBody;
 
     private void Start()
     {
         CountBreakableBlocks();
-        _rigidBody = GetComponent<Rigidbody2D>();
     }
 
     private void CountBreakableBlocks()
