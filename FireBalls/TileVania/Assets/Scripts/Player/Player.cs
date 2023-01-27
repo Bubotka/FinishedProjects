@@ -14,7 +14,8 @@ public class Player : MonoBehaviour
     private PlayerInput _playerInput;
     private Rigidbody2D _rigidBody;
     private Animator _animator;
-    private Collider2D _colider;
+    private CapsuleCollider2D _capsuleColider;
+    private BoxCollider2D _footColider;
 
     private bool _isAlive;
 
@@ -23,7 +24,8 @@ public class Player : MonoBehaviour
         _playerInput= GetComponent<PlayerInput>();
         _rigidBody= GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
-        _colider= GetComponent<Collider2D>();
+        _capsuleColider= GetComponent<CapsuleCollider2D>();
+        _footColider= GetComponent<BoxCollider2D>();
     }
 
     void Update()
@@ -31,6 +33,7 @@ public class Player : MonoBehaviour
         Jump();
         Run();
         FlipPlayerSprite();
+        IsGrounded();
     }
 
     private void Run()
@@ -53,16 +56,16 @@ public class Player : MonoBehaviour
 
     private void Jump()
     {
-        if (!_colider.IsTouchingLayers(LayerMask.GetMask("Ground"))) 
-        {
-            _animator.SetBool("Jump", !_colider.IsTouchingLayers(LayerMask.GetMask("Ground")));
-            return;
-        }
-
-        if (_playerInput.actions["Jump"].triggered)
+       if (_playerInput.actions["Jump"].triggered && IsGrounded())
         {
             _rigidBody.AddForce(Vector2.up * _jumpForce);
         }
-        
+    }
+
+    private bool IsGrounded()
+    {
+        bool isGrounded = _footColider.IsTouchingLayers(LayerMask.GetMask("Ground"));
+        _animator.SetBool("Jump", isGrounded);
+        return isGrounded;
     }
 }
